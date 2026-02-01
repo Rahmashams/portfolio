@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <title>مقياس الآثار السلبية</title>
+
+    <style>
+        body {
+            direction: rtl;
+            font-family: Arial;
+            background: #f3f3f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .card {
+            background: white;
+            width: 450px;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .option {
+            border: 2px solid #ccc;
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 90px;
+        }
+        
+        .option img {
+            width: 100%;
+        }
+        
+        .option.selected {
+            border-color: #4a6cf7;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid #999;
+            background: #fff;
+            cursor: pointer;
+            margin: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- صفحة البداية -->
+    <div class="card" id="startScreen">
+        <h2>🌸 مرحبًا بك</h2>
+        <p>مقياس الآثار السلبية لمواقع التواصل الاجتماعي</p>
+        <button onclick="startQuiz()">ابدأ</button>
+    </div>
+
+    <!-- صفحة الأسئلة -->
+    <div class="card" id="quizScreen" style="display:none;">
+        <h3 id="questionText"></h3>
+
+        <button onclick="playSound()">🔊 اسمع السؤال</button>
+
+        <div id="options" class="options"></div>
+
+        <button onclick="nextQuestion()">التالي ▶</button>
+    </div>
+
+    <audio id="audio"></audio>
+
+    <script>
+        const questions = [
+
+            /* 🟢 صحية */
+            {
+                text: "ماذا تفعل إذا استخدمت الهاتف لفترة طويلة وشعرت بتعب في يديك .ماذا تفعل؟",
+                options: [{
+                    img: "img/img1.jpeg",
+                    label: "تترك الهاتف وترتاح ",
+                    score: 1
+                }, {
+                    img: "img/img2.jpeg",
+                    label: "تكمل لعب قليلا ",
+                    score: 2
+                }, {
+                    img: "img/img3.jpeg",
+                    label: "تستمر في الغب رغم التعب",
+                    score: 3
+                }]
+            }, {
+                text: "أثناء مشاهدة الفيديوهات إذا شعرت بالخمول والتعب اثناء مشاهده اليوتيوب، ماذا تفعل؟",
+                options: [{
+                    img: "img/img n.jpeg",
+                    label: "تغلق الفيديو وترتاح ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.49.54.jpeg",
+                    label: "تستمر في المشاهده دون توقف ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.01.jpeg",
+                    label: "تتوقف قليلا ثم تعود للمشاهده  ",
+                    score: 3
+                }]
+            }, {
+                text: "كيف تشعر عندما تجلس فترة طويلة أمام الهاتف دون حركة . كيف تشعر؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.07.jpeg",
+                    label: " تشعر بالتعب والم في جشمك وعينك ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.15.jpeg",
+                    label: "تشعر بتعب بسيط   ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.13.jpeg",
+                    label: "تعب بالسعاده ولا تشعر بتعب",
+                    score: 3
+                }]
+            }, {
+                text: "إذا جلست منحنياً أمام الهاتف، ماذا يحدث لرقبتك وظهرك؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.17.jpeg",
+                    label: "لا  تشعرباب تعب ",
+                    score: 1
+                }, {
+                    img: "img/imgl;.jpeg",
+                    label: "تشعر بالم بسيط",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.17 (1).jpeg",
+                    label: "تشعر بالم تعب شديد",
+                    score: 3
+                }]
+            },
+
+            /* 🟡 تربوية */
+            {
+                text: "عند مشاهدة فيديو عن جمع الزجاجات الفارغة، ماذا تعتقد أن الشخص يفعل بها؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.17 (2).jpeg",
+                    label: "يرميها في القمامه ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.18 (1).jpeg",
+                    label: "يعيد تدويرها للاستفاده منها",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.18.jpeg",
+                    label: "يحتفظ بها دون استخدام",
+                    score: 3
+                }]
+            }, {
+                text: "إذا جلست وقتًا طويلًا على مواقع التواصل الاجتماعي، ماذا قد يحدث؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.19 (2).jpeg",
+                    label: "تضيع وقتك دون فائده",
+                    score: 1
+                }, {
+
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.19 (1).jpeg",
+                    label: " تشاهد اشياء ممتعه فقط",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.19.jpeg",
+                    label: "تتعلم اشياء مفيده دون تضيع  وفت",
+                    score: 3
+                }]
+            }, {
+                text: "إذا جلست على اليوتيوب كثيرًا، ماذا يحدث لواجباتك المدرسية؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.20 (1).jpeg",
+                    label: "تنسي واجباتك ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.20.jpeg",
+                    label: "تنجز واجباتك دون تاثير",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.20 (2).jpeg",
+                    label: "تنجز بعض الواجبات وتترك بعضها",
+                    score: 3
+                }]
+            }, {
+                text: "إذا أرسلت لك المعلمة فيديوهات تعليمية، ماذا تفعل؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.21.jpeg",
+                    label: "تشاهد الفيديو وتركز جيدا ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.21 (2).jpeg",
+                    label: "لا تشاهده ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.21 (1).jpeg",
+                    label: "تشاهد دون تركيز ",
+                    score: 3
+                }]
+            },
+
+            /* 🔵 اجتماعية */
+            {
+                text: "إذا شاهدت فيديو لأطفال يتعرضون لسوء معاملة، ماذا تفعل؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.22.jpeg",
+                    label: "تعجب بالفيديو ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.22 (1).jpeg",
+                    label: "أخبر المعلمة بما شاهدت",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.22 (2).jpeg",
+                    label: "تشاهد الفيدو ولا تهتم ",
+                    score: 3
+                }]
+            }, {
+                text: "إذا شاهدت فيديو يستخدم الضرب كأسلوب للتربية، ماذا تفعل؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.23.jpeg",
+                    label: "تتعلم تحل المشاكل في هدوء ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.23 (1).jpeg",
+                    label: "تستخجم الضرب مع غيرك ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.23 (2).jpeg",
+                    label: "تترك الفيديو دون اهتمام",
+                    score: 3
+                }]
+            }, {
+                text: "إذا شاهدت فيديو يسخر فيه الأطفال من أصدقائهم، ماذا تفعل؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.24 (1).jpeg",
+                    label: "تقلدهم وتسخر من غيرك ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.24 (2).jpeg",
+                    label: "ترفض هذا السلوك وتشعر بالضيق ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.24.jpeg",
+                    label: "تشاهد دون تقليد",
+                    score: 3
+                }]
+            }, {
+                text: "إذا قضيت وقتًا طويلًا على الهاتف ولم تجلس مع أسرتك، ماذا يحدث؟",
+                options: [{
+                    img: "img/img3.jpeg",
+                    label: "تبقيى علي الهاتف فقط  ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.25.jpeg",
+                    label: "تقل علاقتك باسرتك  ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.25 (1).jpeg",
+                    label: "تجلس قليلا مع اللاسره وقليلا مع الهاتف ",
+                    score: 3
+                }]
+            }, {
+                text: "عند مشاهده فيديوهات لاشخاص يملكون شياء غاليه، كيف تشعر؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.26.jpeg",
+                    label: "تشعر بالحزن وتتمني ان تون مثلهم    ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.25 (2).jpeg",
+                    label: "تجمد الله علي مالديك ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.26 (1).jpeg",
+                    label: "تشاهد فقط دون شعور واضح ",
+                    score: 3
+                }]
+            }, {
+                text: "اذا استخدمت التيك توك لفتراك طويله قبل النوم ، ماذا يحدث؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.27.jpeg",
+                    label: "تنام وترتاح",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.27 (1).jpeg",
+                    label: "تجد صعوبه في النوم  ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.26 (2).jpeg",
+                    label: "تنام لكن تحلم بالفيديوهات ",
+                    score: 3
+                }]
+            }, {
+                text: "اذا اهدت صور اطفال بملابس جميله جدا ، ماذا تشعر؟",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.28 (2).jpeg",
+                    label: "تشعر بالحزن والملل ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.28 (1).jpeg",
+                    label: "لا تهتم ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.28.jpeg",
+                    label: "تكون راضيا وسعيدا  ",
+                    score: 3
+                }]
+            }, {
+                text: "إذا كانت التعليقات على صورك بعضها جميل وبعضها سيئ ؟كيف تتصرف ",
+                options: [{
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.29 (1).jpeg",
+                    label: "لا تتهتم بالتعليقات ابدا  ",
+                    score: 1
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.30.jpeg",
+                    label: "تتعلم من الكلام الجيد وتتجاهل  السيئ",
+                    score: 2
+                }, {
+                    img: "img/WhatsApp Image 2026-01-30 at 15.50.29.jpeg",
+                    label: "تنزعج قليلا ثم تنسي ",
+                    score: 3
+                }]
+            },
+
+
+        ];
+
+        let index = 0;
+        let selectedScore = null;
+
+        function startQuiz() {
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("quizScreen").style.display = "block";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[index];
+            document.getElementById("questionText").innerText = q.text;
+            let html = "";
+            q.options.forEach(opt => {
+                html += `
+        <div class="option" onclick="selectOption(this,${opt.score})">
+            <img src="${opt.img}">
+            <div style="margin-top:6px;font-size:14px">${opt.label}</div>
+        </div>`;
+            });
+            document.getElementById("options").innerHTML = html;
+            selectedScore = null;
+        }
+
+        function selectOption(el, score) {
+            document.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+            el.classList.add("selected");
+            selectedScore = score;
+        }
+
+        function nextQuestion() {
+            if (selectedScore === null) {
+                alert("اختاري إجابة الأول");
+                return;
+            }
+            index++;
+            if (index < questions.length) {
+                showQuestion();
+            } else {
+                alert("خلص المقياس 🎉");
+            }
+        }
+
+        function playSound() {
+            alert("مكان الصوت جاهز 🔊");
+        }
+    </script>
+
+</body>
+
+</html>
+</script>
+
+</body>
+
+</html>
